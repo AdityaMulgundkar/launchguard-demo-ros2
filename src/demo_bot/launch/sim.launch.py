@@ -4,7 +4,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
 from launch_ros.actions import Node
 
 os.environ['TURTLEBOT3_MODEL'] = 'burger'
@@ -29,9 +28,10 @@ def generate_launch_description():
 
     urdf_file = os.path.join(
         get_package_share_directory('turtlebot3_description'),
-        'urdf', 'turtlebot3_burger.urdf.xacro',
+        'urdf', 'turtlebot3_burger.urdf',
     )
-    robot_desc = Command(['xacro ', urdf_file])
+    with open(urdf_file, 'r') as f:
+        robot_desc = f.read()
 
     robot_state_pub = Node(
         package='robot_state_publisher',
